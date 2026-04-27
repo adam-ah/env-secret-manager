@@ -97,7 +97,7 @@ DATABASE_URL = "postgres://user:pass@localhost:5432/project_b?sslmode=disable"
 Matching rules:
 
 - `screeners` matches any folder named `screeners`, case-insensitive
-- `~/code/project-a` matches that exact path and its children
+- `~/code/project-a` works because `~` is expanded to your home directory first
 - `/mnt/e/temp/project-b` matches that exact path and its children
 
 ## Shell hooks
