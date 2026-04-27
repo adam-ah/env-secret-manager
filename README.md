@@ -172,7 +172,7 @@ $EDITOR ~/.secretenv/config.toml
 
 This is designed to be boringly fast enough to run on every prompt change.
 
-On this machine, `secretenv export` takes `8 ms` to run and export env variables.
+`secretenv export` takes `8 ms` to run and export env variables.
 
 ## Security notes
 
