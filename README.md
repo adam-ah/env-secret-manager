@@ -176,9 +176,11 @@ This is designed to be boringly fast enough to run on every prompt change.
 
 ## Demo Replay
 
-`demo.cast` is a text replay of the tool switching into a project, exporting vars, then leaving and clearing them again.
+![Demo](demo.gif)
 
-If you have an asciinema-style player, you can play it back as a terminal demo instead of using a video.
+`demo.cast` is the source text replay of the tool switching into a project, exporting vars, then leaving and clearing them again.
+
+GitHub renders `demo.gif` inline on the project page, which is why that is the file to look at here.
 
 ## Security notes
 
