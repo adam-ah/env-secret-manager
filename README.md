@@ -174,6 +174,12 @@ This is designed to be boringly fast enough to run on every prompt change.
 
 `secretenv export` takes `8 ms` to run and export env variables.
 
+## Demo Replay
+
+`demo.cast` is a text replay of the tool switching into a project, exporting vars, then leaving and clearing them again.
+
+If you have an asciinema-style player, you can play it back as a terminal demo instead of using a video.
+
 ## Security notes
 
 This keeps secrets out of repo-local files, which helps avoid accidental commits and copy-paste leakage.

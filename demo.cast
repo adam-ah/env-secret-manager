@@ -1,0 +1,9 @@
+{"version":2,"width":80,"height":24,"timestamp":1714200000,"env":{"SHELL":"bash","TERM":"xterm-256color"}}
+[0.000000,"o","$ cat ~/.secretenv/config.toml\r\n"]
+[0.100000,"o","[projects.\"~/code/project-a\".env]\r\nAPP_ENV = \"local\"\r\nAPI_USERNAME = \"project_a_user\"\r\nAPI_PASSWORD = \"project_a_password\"\r\n\r\n"]
+[0.200000,"o","$ cd ~/code/project-a\r\n"]
+[0.300000,"o","$ secretenv export\r\n"]
+[0.400000,"o","unset API_PASSWORD;\r\nunset API_USERNAME;\r\nunset APP_ENV;\r\nexport API_PASSWORD='project_a_password';\r\nexport API_USERNAME='project_a_user';\r\nexport APP_ENV='local';\r\nexport SECRETENV_ACTIVE_VARS='API_PASSWORD API_USERNAME APP_ENV';\r\nexport SECRETENV_ACTIVE_PROJECT='~/code/project-a';\r\n"]
+[0.500000,"o","$ cd ~\r\n"]
+[0.600000,"o","$ secretenv export\r\n"]
+[0.700000,"o","unset API_PASSWORD;\r\nunset API_USERNAME;\r\nunset APP_ENV;\r\nexport SECRETENV_ACTIVE_VARS='';\r\nexport SECRETENV_ACTIVE_PROJECT='';\r\n"]
