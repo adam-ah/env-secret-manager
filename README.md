@@ -1,5 +1,7 @@
 # env-secret-manager
 
+![Demo](demo.gif)
+
 `env-secret-manager` is a tiny Go CLI that turns one global TOML file into the right environment variables for the directory you are in.
 
 It is for people who are tired of sprinkling secrets through repo-local files, `.envrc` setup, shell glue, and half a dozen special-case tools just to get the right vars into the right project.
@@ -173,14 +175,6 @@ $EDITOR ~/.secretenv/config.toml
 This is designed to be boringly fast enough to run on every prompt change.
 
 `secretenv export` takes `8 ms` to run and export env variables.
-
-## Demo Replay
-
-![Demo](demo.gif)
-
-`demo.cast` is the source text replay of the tool switching into a project, exporting vars, then leaving and clearing them again.
-
-GitHub renders `demo.gif` inline on the project page, which is why that is the file to look at here.
 
 ## Security notes
 
