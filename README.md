@@ -172,10 +172,10 @@ $EDITOR ~/.secretenv/config.toml
 
 This is designed to be boringly fast enough to run on every prompt change.
 
-On this machine, 5,000 runs of `secretenv export` averaged:
+On this machine, `secretenv export` runs in about `8 ms`:
 
-- `8.288 ms` when no config file was present
-- `8.780 ms` with a representative config and a matching project directory
+- about `8 ms` with no config file present
+- about `9 ms` with a representative config and a matching project directory
 
 That is fast enough to keep the shell hook invisible in normal use.
 
