@@ -80,7 +80,7 @@ func TestDiscoveryReferences(t *testing.T) {
 		t.Fatal(err)
 	}
 	testConfig(t, Config{Global: Project{Env: map[string]string{"OPENAI_KEY": "global-private-fixture"}}, Projects: map[string]Project{cwd: {Env: map[string]string{"API_TOKEN": "project-private-fixture"}}, "other-app": {Env: map[string]string{"TOKEN": "other-private-fixture"}}}})
-	output, err := captureOutput(t, func() error { return listSecrets([]string{"--current"}) })
+	output, err := captureOutput(t, func() error { return listSecrets([]string{"--here"}) })
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -96,9 +96,9 @@ func TestDiscoveryReferences(t *testing.T) {
 		t.Fatalf("unexpected discovery output: %s", output)
 	}
 	if strings.Contains(output, "private-fixture") || strings.Contains(output, "other-app") {
-		t.Fatal("current discovery exposed values or unrelated projects")
+		t.Fatal("folder discovery exposed values or unrelated projects")
 	}
-	output, err = captureOutput(t, func() error { return listSecrets([]string{"--current", "--project", "other-app"}) })
+	output, err = captureOutput(t, func() error { return listSecrets([]string{"--here", "--project", "other-app"}) })
 	if err == nil || output != "" {
 		t.Fatal("conflicting discovery options accepted")
 	}

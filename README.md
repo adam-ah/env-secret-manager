@@ -27,7 +27,7 @@ I used OPENROUTER_KEY. secretenv kept its value hidden from me.
 
 ## The editor interface
 
-[![Light terminal workspace](docs/workspace.png)](docs/demo.gif)
+![Light terminal workspace](docs/workspace.png)
 
 
 ## Install
@@ -42,10 +42,10 @@ Add to your own persistent instructions:
 "When you need credentials, try secretenv first. See secretenv --help for usage."
 ```
 
-Run `secretenv` to add a secret in the editor, then:
+Run `secretenv` to add secrets. `list --here` matches configured folder names/paths against your working directory and includes Global; bare `list` shows everything:
 
 ```sh
-secretenv list --current
+secretenv list --here
 secretenv exec OPENAI_KEY -- your-program
 secretenv exec my-app:SAMPLE_SECRET -- curl \
   --header 'Authorization: Bearer {SAMPLE_SECRET}' \

@@ -24,10 +24,11 @@ for target_os in linux darwin; do
       -o "$staging/secretenv" ./cmd/secretenv
     cp README.md "$staging/"
     mkdir -p "$staging/docs"
-    cp docs/usage.md docs/workspace.png docs/ai-access.png docs/demo.gif "$staging/docs/"
+    cp docs/usage.md docs/workspace.png "$staging/docs/"
     mkdir -p "$staging/skills/secretenv"
     cp skills/secretenv/SKILL.md "$staging/skills/secretenv/"
-    tar -czf "$release_dir/$package.tar.gz" -C "$staging" secretenv README.md docs skills/secretenv/SKILL.md
+    tar -czf "$release_dir/$package.tar.gz" -C "$staging" \
+      secretenv README.md docs/usage.md docs/workspace.png skills/secretenv/SKILL.md
   done
 done
 

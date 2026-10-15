@@ -13,12 +13,13 @@ import (
 var helpText = `secretenv — store secrets, inject them into commands, and redact their output.
 
   secretenv [menu|edit]                 Open editor; show help without a terminal
-  secretenv list [--current|--project NAME]  List names and exact refs as JSON
+  secretenv list [--here|--project NAME]  List names and exact refs as JSON
   secretenv exec REF... -- PROGRAM [ARGS]   Inject secrets and run a program
   secretenv install [bash|zsh]           Show folder-based shell hook setup
   secretenv help|-h|--help               Show this help
 
-REF: KEY (Global) or PROJECT:KEY. Find refs: secretenv list --current
+REF: KEY (Global) or PROJECT:KEY. Find refs: secretenv list --here
+--here: Global plus secrets matching folder names/paths in the current directory.
 Multiple secrets: exec REF REF -- PROGRAM. Agents: use list and exec only.
 
 ` + envExampleTitle + " · " + sampleExamples.envDescription() + "\n" +

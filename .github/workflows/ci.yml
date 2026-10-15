@@ -41,7 +41,7 @@ jobs:
           ./bin/secretenv < /dev/null > startup-help.txt
           ./bin/secretenv --help > explicit-help.txt
           cmp startup-help.txt explicit-help.txt
-          grep -F 'secretenv list --current' startup-help.txt
+          grep -F 'secretenv list --here' startup-help.txt
       - name: Upload tested binary
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:

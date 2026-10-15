@@ -5,11 +5,11 @@
 Discover names and exact references:
 
 ```sh
-secretenv list --current
+secretenv list --here
 secretenv list
 ```
 
-`--current` returns Global plus the matching project. Without it, `list` returns all projects. Output contains names, never values:
+`--here` matches configured folder names/paths against the command's working directory. For example, `my-app` matches `/work/my-app` and its subfolders; `/work/my-app` matches that specific path and its subfolders. Global is always included, even if no folder matches. Bare `list` shows everything. Use `--project NAME` to select an exact configured name instead. Output contains names, never values:
 
 ```json
 [
@@ -85,15 +85,6 @@ The footer shows available actions once, with labels specific to the active pane
 
 Tabs `1`–`4` open Vault, Setup, AI access, and Help. The interface uses Bubble Tea and Lip Gloss and requires at least 64×24 cells. Startup, `menu`, and `edit` print agent-focused help unless both input and output are terminals with cursor support. Explicit `list` and `exec` commands still run normally in scripts and agent sessions.
 
-![AI access guide with discovery and execution examples](ai-access.png)
-
-<details>
-<summary>Watch the workspace demo</summary>
-
-![Global secrets, project secrets, editor, and AI access guide](demo.gif)
-
-</details>
-
 New project names accept letters, numbers, `.`, `_`, `-`, `/`, and `:`; they cannot start with `-`. `Global` is reserved. Spaces, quotes, tilde, backslashes, and shell symbols are rejected so new references can be typed without quotes. Safe absolute paths work. Secret keys use shell variable syntax: letters, numbers, and underscores, starting with a letter or underscore. `SECRETENV_ACTIVE_*` is reserved.
 
 ## Config and optional shell integration
@@ -150,4 +141,4 @@ git push origin v0.2.1
 
 Version tags trigger the same tests first, then build Linux and macOS archives for `amd64` and `arm64`, generate checksums, and publish a GitHub release with generated notes. Tags such as `v0.2.1-rc.1` produce prereleases. No extra repository secrets are needed. To test packaging locally without publishing, run `./release.sh v0.2.1`; output goes to `dist/v0.2.1/`.
 
-Source and tests live in `cmd/secretenv/`. Screenshots and the demo GIF live in `docs/`.
+Source and tests live in `cmd/secretenv/`. The workspace screenshot lives in `docs/`.

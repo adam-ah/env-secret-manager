@@ -46,7 +46,7 @@ func (m workspace) guideContent() string {
 		if examples.name == "" {
 			examples = sampleExamples
 		}
-		return section("01", "Discover references", "list --current returns Global plus the matching project's names and exact references. list returns all projects. Agents use list and exec; never read the config or invoke the internal _hook command.") + code("secretenv list --current\nsecretenv list") + "\n" +
+		return section("01", "Discover references", "list --here matches configured folder names/paths against the working directory and includes Global. For example, my-app matches /work/my-app and its subfolders. If no folder matches, only Global is returned. Bare list shows everything. Agents use list and exec; never read the config or invoke the internal _hook command.") + code("secretenv list --here\nsecretenv list") + "\n" +
 			section("02", envExampleTitle, examples.envDescription()+". PROJECT:KEY becomes KEY, without the project prefix. Add multiple references before --; inherited exported variables and the working directory are preserved, and parent variables do not change.") + code(examples.variableCommand()) + "\n" +
 			section("03", envCurlExampleTitle, "sh -c explicitly runs a child shell. Single quotes defer $"+examples.name+" expansion until the child receives the secret.") + code(examples.envCurlCommand()) + "\n" +
 			section("04", curlExampleTitle, "Use {KEY} to insert a selected secret into an argument. This example runs curl directly, without a shell. Literal injected values are redacted from stdout and stderr in both examples.") + code(examples.curlCommand()) + "\n" +

@@ -11,16 +11,16 @@ import (
 func listSecrets(args []string) error {
 	flags := flag.NewFlagSet("list", flag.ContinueOnError)
 	flags.SetOutput(io.Discard)
-	project := flags.String("project", "", "exact project selector")
-	current := flags.Bool("current", false, "match the working directory")
+	project := flags.String("project", "", "exact configured name")
+	here := flags.Bool("here", false, "Global plus secrets matching this folder's name/path")
 	if err := flags.Parse(args); err != nil {
-		return errors.New("usage: secretenv list [--current | --project SELECTOR]")
+		return errors.New("usage: secretenv list [--here | --project NAME]")
 	}
 	if flags.NArg() != 0 {
-		return errors.New("usage: secretenv list [--current | --project SELECTOR]")
+		return errors.New("usage: secretenv list [--here | --project NAME]")
 	}
-	if *current && *project != "" {
-		return errors.New("use either --current or --project, not both")
+	if *here && *project != "" {
+		return errors.New("use either --here or --project, not both")
 	}
 	cfg, err := loadConfig()
 	if err != nil {
@@ -59,7 +59,7 @@ func listSecrets(args []string) error {
 			return err
 		}
 		entries = append(entries, makeEntry(match.Selector, match.Project))
-	} else if *current {
+	} else if *here {
 		cwd, err := os.Getwd()
 		if err != nil {
 			return err
