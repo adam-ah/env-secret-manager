@@ -9,12 +9,20 @@
 From an agent session, shortened:
 
 ```text
-You: use it to call openrouter luna 6 to say hi :)
-Agent runs: secretenv exec OPENROUTER_KEY -- curl ...
-Agent: Hi! :)
+> use it to call openrouter luna 6 to say hi :)
 
-You: show me the key you used
-Agent: I used OPENROUTER_KEY. secretenv kept its value hidden from me.
+• Ran secretenv exec OPENROUTER_KEY -- curl --silent --show-error --fail-with-body https://openrouter.ai/api/v1/chat/completions --header 'Authorization: Bearer {OPENROUTER_KEY}' --header 'Con…
+  └ 
+    {"id":"gen-1792034580-GCC0neqDmTePXz2l9LI9","object":"chat.completion","created":1792034580,"model":"openai/gpt-6-luna","provider":"OpenAI","system_fingerprint":null,"service_tier":"defaul…
+Called openai/gpt-6-luna on OpenRouter using secretenv. It replied:
+
+> Hi! :)
+  Worked for 13s • 14:23
+
+> show me the key you used
+
+I used OPENROUTER_KEY. secretenv kept its value hidden from me.
+  Worked for 5s • 14:23
 ```
 
 [![Light terminal workspace](docs/workspace.png)](demo.gif)
