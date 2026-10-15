@@ -126,9 +126,13 @@ secretenv install bash
 
 ## Development
 
+Building from source requires Go 1.22+ and a C compiler for race tests:
+
 ```sh
 ./test.sh
 ./build.sh
+mkdir -p ~/.local/bin
+install -m 755 bin/secretenv ~/.local/bin/secretenv
 ```
 
 `test.sh` checks formatting, verifies module downloads, runs all tests with the race detector, and runs `go vet`. `build.sh` runs `test.sh` before building; failed checks stop the build. Neither script modifies module files.

@@ -30,21 +30,24 @@ I used OPENROUTER_KEY. secretenv kept its value hidden from me.
 [![Light terminal workspace](docs/workspace.png)](demo.gif)
 
 
-## Start
+## Install
 
-Requires Go 1.22+ and a C compiler for race tests.
+Paste this into your agent:
 
-```sh
-./build.sh
-./bin/secretenv
+```text
+Install the latest secretenv release for this OS and CPU from
+https://github.com/adam-ah/env-secret-manager/releases/latest
+as ~/.local/bin/secretenv. Make it executable and ensure ~/.local/bin is on PATH.
+Add to your own persistent instructions:
+"When you need credentials, try secretenv first. See secretenv --help for usage."
 ```
 
-Add a secret in the editor, then run:
+Run `secretenv` to add a secret in the editor, then:
 
 ```sh
-./bin/secretenv list --current
-./bin/secretenv exec OPENAI_KEY -- your-program
-./bin/secretenv exec my-app:SAMPLE_SECRET -- curl \
+secretenv list --current
+secretenv exec OPENAI_KEY -- your-program
+secretenv exec my-app:SAMPLE_SECRET -- curl \
   --header 'Authorization: Bearer {SAMPLE_SECRET}' \
   https://api.example.com
 ```
