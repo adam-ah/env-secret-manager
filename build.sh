@@ -17,7 +17,7 @@ CGO_ENABLED=0 go build \
   -buildvcs=false \
   -ldflags="-s -w" \
   -o "$OUT" \
-  .
+  ./cmd/secretenv
 
 chmod +x "$OUT"
 

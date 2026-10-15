@@ -11,7 +11,7 @@ import (
 
 func TestNoCommentsInGoCode(t *testing.T) {
 	positions := token.NewFileSet()
-	err := filepath.WalkDir(".", func(path string, entry fs.DirEntry, walkErr error) error {
+	err := filepath.WalkDir(repositoryPath(), func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}

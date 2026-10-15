@@ -90,7 +90,7 @@ Tabs `1`–`4` open Vault, Setup, AI access, and Help. The interface uses Bubble
 <details>
 <summary>Watch the workspace demo</summary>
 
-![Global secrets, project secrets, editor, and AI access guide](../demo.gif)
+![Global secrets, project secrets, editor, and AI access guide](demo.gif)
 
 </details>
 
@@ -144,10 +144,10 @@ GitHub Actions runs the build on Linux with Go 1.22 and the current stable Go, a
 To publish a release after committing and pushing changes:
 
 ```sh
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.2.1
+git push origin v0.2.1
 ```
 
-Version tags trigger the same tests first, then build Linux and macOS archives for `amd64` and `arm64`, generate checksums, and publish a GitHub release with generated notes. Tags such as `v0.2.0-rc.1` produce prereleases. No extra repository secrets are needed. To test packaging locally without publishing, run `./release.sh v0.2.0`; output goes to `dist/v0.2.0/`.
+Version tags trigger the same tests first, then build Linux and macOS archives for `amd64` and `arm64`, generate checksums, and publish a GitHub release with generated notes. Tags such as `v0.2.1-rc.1` produce prereleases. No extra repository secrets are needed. To test packaging locally without publishing, run `./release.sh v0.2.1`; output goes to `dist/v0.2.1/`.
 
-To refresh the screenshots and demo, install asciinema's `agg` and `ffmpeg`, then run `./render.sh`. Rendering uses fake fixture data and never reads your secrets config.
+Source and tests live in `cmd/secretenv/`. Screenshots and the demo GIF live in `docs/`.

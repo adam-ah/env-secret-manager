@@ -27,7 +27,7 @@ I used OPENROUTER_KEY. secretenv kept its value hidden from me.
 
 ## The editor interface
 
-[![Light terminal workspace](docs/workspace.png)](demo.gif)
+[![Light terminal workspace](docs/workspace.png)](docs/demo.gif)
 
 
 ## Install

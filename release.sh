@@ -21,14 +21,13 @@ for target_os in linux darwin; do
     mkdir -p "$staging"
     GOOS="$target_os" GOARCH="$target_arch" CGO_ENABLED=0 go build \
       -mod=readonly -trimpath -buildvcs=false -ldflags="-s -w" \
-      -o "$staging/secretenv" .
+      -o "$staging/secretenv" ./cmd/secretenv
     cp README.md "$staging/"
     mkdir -p "$staging/docs"
-    cp docs/usage.md docs/workspace.png docs/ai-access.png "$staging/docs/"
-    cp demo.gif "$staging/"
+    cp docs/usage.md docs/workspace.png docs/ai-access.png docs/demo.gif "$staging/docs/"
     mkdir -p "$staging/skills/secretenv"
     cp skills/secretenv/SKILL.md "$staging/skills/secretenv/"
-    tar -czf "$release_dir/$package.tar.gz" -C "$staging" secretenv README.md docs demo.gif skills/secretenv/SKILL.md
+    tar -czf "$release_dir/$package.tar.gz" -C "$staging" secretenv README.md docs skills/secretenv/SKILL.md
   done
 done
 

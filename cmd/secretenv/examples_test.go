@@ -11,7 +11,7 @@ func TestPublishedExamplesStayConsistent(t *testing.T) {
 		t.Fatalf("help exceeds one screen: %d lines", lines)
 	}
 	for _, path := range []string{"docs/usage.md"} {
-		body, err := os.ReadFile(path)
+		body, err := os.ReadFile(repositoryPath(path))
 		if err != nil {
 			t.Fatal(err)
 		}
