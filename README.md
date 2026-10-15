@@ -25,7 +25,10 @@ I used OPENROUTER_KEY. secretenv kept its value hidden from me.
   Worked for 5s • 14:23
 ```
 
+## The editor interface
+
 [![Light terminal workspace](docs/workspace.png)](demo.gif)
+
 
 ## Start
 
