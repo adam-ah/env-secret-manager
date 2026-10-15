@@ -10,138 +10,25 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-const helpText = `
-secretenv
+var helpText = `secretenv — store secrets, inject them into commands, and redact their output.
 
-Loads project-specific environment variables from a single global TOML file:
+  secretenv [menu|edit]                 Open editor; show help without a terminal
+  secretenv list [--current|--project NAME]  List names and exact refs as JSON
+  secretenv exec REF... -- PROGRAM [ARGS]   Inject secrets and run a program
+  secretenv install [bash|zsh]           Show folder-based shell hook setup
+  secretenv help|-h|--help               Show this help
 
-  ~/.secretenv/config.toml
+REF: KEY (Global) or PROJECT:KEY. Find refs: secretenv list --current
+Multiple secrets: exec REF REF -- PROGRAM. Agents: use list and exec only.
 
-It is designed for shell hooks. When you cd into a matching project folder,
-it prints shell commands that export that project's env vars. When you leave,
-it prints shell commands that unset all managed env vars.
-
-It does NOT read:
-  .env
-  .envrc
-  mise.toml
-  project-local files
-  secret-tool
-  macOS Keychain
-  AWS
-
-It only reads:
-  ~/.secretenv/config.toml
-
-Commands:
-
-  secretenv export
-      Print shell code for the current directory.
-
-  secretenv help
-      Print this help.
-
-Example ~/.secretenv/config.toml:
-
-  [projects."screeners".env]
-  APP_ENV = "local"
-  SMTP_HOST = "localhost"
-  SMTP_PORT = "1025"
-  SMTP_USERNAME = "dev_user"
-  SMTP_PASSWORD = "dev_password"
-  CLOUDFLARE_TOKEN = "cf_dev_token"
-
-  [projects."~/code/project-a".env]
-  APP_ENV = "local"
-  API_USERNAME = "project_a_user"
-  API_PASSWORD = "project_a_password"
-
-  [projects."/mnt/e/temp/project-b".env]
-  APP_ENV = "local"
-  DATABASE_URL = "postgres://user:pass@localhost:5432/project_b?sslmode=disable"
-
-Matching rules:
-
-  [projects."screeners"]
-      Matches any folder named "screeners", case-insensitive:
-
-        /tmp/screeners
-        /tmp/SCREENERS
-        /mnt/e/temp/screeners
-        /my/lawd/screeners/subdir
-
-  [projects."~/code/project-a"]
-      Matches that absolute path and its children.
-
-  [projects."/mnt/e/temp/project-b"]
-      Matches that absolute path and its children.
-
-Matching is case-insensitive everywhere, including Linux.
-
-Zsh hook:
-
-  Add this to ~/.zshrc:
-
-  _secretenv_hook() {
-  local out
-  local exit_code
-
-  command -v secretenv >/dev/null 2>&1 || return
-
-  out="$(secretenv export 2>&1)"
-  exit_code=$?
-
-  if [[ $exit_code -ne 0 ]]; then
-    echo "[secretenv] error:" >&2
-    echo "$out" >&2
-    return
-  fi
-
-  eval "$out"
-  }
-
-  autoload -Uz add-zsh-hook
-  add-zsh-hook chpwd _secretenv_hook
-
-  _secretenv_hook
-
-
-Bash hook:
-
-  Add this to ~/.bashrc:
-
-    _secretenv_hook() {
-      command -v secretenv >/dev/null 2>&1 || return
-      eval "$(secretenv export)"
-    }
-
-    PROMPT_COMMAND="_secretenv_hook${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
-
-Install:
-
-  mkdir -p ~/.secretenv
-  nano ~/.secretenv/config.toml
-
-  go install github.com/adam-ah/env-secret-manager@latest
-
-  # or build from a clone:
-  go build -o secretenv .
-  mkdir -p ~/.local/bin
-  mv secretenv ~/.local/bin/
-
-Make sure ~/.local/bin is in PATH.
-
-Security note:
-
-  This avoids repo leaks because secrets are not inside project folders.
-  But ~/.secretenv/config.toml is still plaintext. Protect it:
-
-    chmod 700 ~/.secretenv
-    chmod 600 ~/.secretenv/config.toml
-`
+` + envExampleTitle + " · " + sampleExamples.envDescription() + "\n" +
+	sampleExamples.variableCommand() + "\n" +
+	envCurlExampleTitle + "\n" + sampleExamples.envCurlCommand() + "\n" +
+	curlExampleTitle + "\n" + sampleExamples.curlCommand() + "\n"
 
 type Config struct {
 	Projects map[string]Project `toml:"projects"`
+	Global   Project            `toml:"global"`
 }
 
 type Project struct {
@@ -156,32 +43,49 @@ type Match struct {
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Print(helpText)
-		return
+	if err := run(os.Args[1:]); err != nil {
+		fmt.Fprintf(os.Stderr, "secretenv: %v\n", err)
+		if childErr, ok := err.(*childExitError); ok {
+			os.Exit(childErr.code)
+		}
+		os.Exit(1)
 	}
+}
 
-	switch os.Args[1] {
+func run(args []string) error {
+	if len(args) == 0 {
+		return openMenu()
+	}
+	if len(args) == 2 && (args[1] == "--help" || args[1] == "-h") {
+		fmt.Print(helpText)
+		return nil
+	}
+	switch args[0] {
 	case "help", "-h", "--help":
 		fmt.Print(helpText)
-		return
-
-	case "export":
-		if err := exportForCurrentDirectory(); err != nil {
-			fmt.Fprintf(os.Stderr, "secretenv: %v\n", err)
-			os.Exit(1)
+		return nil
+	case "menu":
+		return openMenu()
+	case "edit":
+		return editSecrets()
+	case "install":
+		return showInstall(args[1:])
+	case "list":
+		return listSecrets(args[1:])
+	case "exec":
+		return execSecrets(args[1:])
+	case "_hook":
+		if len(args) != 1 {
+			return fmt.Errorf("internal shell hook takes no arguments")
 		}
-		return
-
+		return exportForCurrentDirectory()
 	default:
-		fmt.Fprintf(os.Stderr, "secretenv: unknown command %q\n\n", os.Args[1])
-		fmt.Print(helpText)
-		os.Exit(2)
+		return fmt.Errorf("unknown command %q; run secretenv help", args[0])
 	}
 }
 
 func exportForCurrentDirectory() error {
-	cfgPath := filepath.Join(homeDir(), ".secretenv", "config.toml")
+	cfgPath := configPath()
 
 	var cfg Config
 	if _, err := toml.DecodeFile(cfgPath, &cfg); err != nil {
@@ -189,7 +93,7 @@ func exportForCurrentDirectory() error {
 			clearActive()
 			return nil
 		}
-		return fmt.Errorf("config error: %w", err)
+		return fmt.Errorf("cannot parse config %s; check TOML syntax locally", cfgPath)
 	}
 
 	cwd, err := os.Getwd()
@@ -203,7 +107,6 @@ func exportForCurrentDirectory() error {
 	allVars := allProjectVars(cfg)
 	activeVars := strings.Fields(os.Getenv("SECRETENV_ACTIVE_VARS"))
 
-	// Remove all currently or previously managed vars.
 	for _, name := range union(allVars, activeVars) {
 		if !validShellName(name) {
 			fmt.Fprintf(os.Stderr, "secretenv: ignoring invalid env var name %q\n", name)
@@ -265,12 +168,6 @@ func matchingProject(cfg Config, cwd string) *Match {
 func matchSelector(selector string, project Project, cwdCmp string) *Match {
 	expanded := expandHome(selector)
 
-	// Absolute path selector:
-	//
-	//   [projects."/mnt/e/temp/screeners"]
-	//   [projects."~/code/screeners"]
-	//
-	// Matches that path and children.
 	if filepath.IsAbs(expanded) {
 		projectPath := cleanPath(expanded)
 		projectCmp := pathCmp(projectPath)
@@ -287,15 +184,6 @@ func matchSelector(selector string, project Project, cwdCmp string) *Match {
 		return nil
 	}
 
-	// Shorthand selector:
-	//
-	//   [projects."screeners"]
-	//
-	// Matches any folder segment named "screeners", case-insensitive:
-	//
-	//   /tmp/screeners
-	//   /tmp/SCREENERS
-	//   /mnt/e/temp/screeners/subdir
 	short := pathCmp(filepath.Clean(selector))
 	short = strings.Trim(short, string(os.PathSeparator))
 
@@ -312,7 +200,7 @@ func matchSelector(selector string, project Project, cwdCmp string) *Match {
 
 	for i := 0; i <= len(cwdParts)-len(shortParts); i++ {
 		if equalSlice(cwdParts[i:i+len(shortParts)], shortParts) {
-			// Prefer deeper / more specific matches.
+
 			score := 1_000 + i*10 + len(short)
 			return &Match{
 				Selector:    selector,
