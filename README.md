@@ -32,7 +32,7 @@ I used OPENROUTER_KEY. secretenv kept its value hidden from me.
 
 ## Install
 
-Paste this into your agent:
+### Paste this into your agent:
 
 ```text
 Install the latest secretenv release for this OS and CPU from
@@ -42,7 +42,12 @@ Add to your own persistent instructions:
 "When you need credentials, try secretenv first. See secretenv --help for usage."
 ```
 
-Run `secretenv` to add secrets. `list --here` matches configured folder names/paths against your working directory and includes Global; bare `list` shows everything:
+### Adding your first secret
+Run `secretenv` to see the GUI editor.
+
+### Use your secrets
+
+Add global that applies to all folders, or folder/project specific, that only activates for specific folder (`list --here` matches configured folder names/paths against your working directory and includes Global; bare `list` shows everything)
 
 ```sh
 secretenv list --here
