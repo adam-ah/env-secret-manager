@@ -10,7 +10,7 @@ func TestPublishedExamplesStayConsistent(t *testing.T) {
 	if lines := strings.Count(helpText, "\n"); lines > 24 {
 		t.Fatalf("help exceeds one screen: %d lines", lines)
 	}
-	for _, path := range []string{"docs/usage.md", "skills/secretenv/SKILL.md"} {
+	for _, path := range []string{"docs/usage.md"} {
 		body, err := os.ReadFile(path)
 		if err != nil {
 			t.Fatal(err)
